@@ -1,4 +1,4 @@
-package adapters.output
+package io.github.joss.adapters.output
 
 class ConsoleSwaggerSchemaOutputStream: SwaggerSchemaOutputStream {
 

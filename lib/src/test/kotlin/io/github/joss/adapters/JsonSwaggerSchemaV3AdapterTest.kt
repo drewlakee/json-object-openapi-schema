@@ -1,7 +1,7 @@
-package adapters
+package io.github.joss.adapters
 
-import adapters.exceptions.JsonIsNotAnObject
-import adapters.output.SwaggerSchemaOutputStream
+import io.github.joss.adapters.exceptions.JsonIsNotAnObject
+import io.github.joss.adapters.output.SwaggerSchemaOutputStream
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest

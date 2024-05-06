@@ -1,8 +1,8 @@
-package adapters
+package io.github.joss.adapters
 
-import adapters.exceptions.JsonIsNotAnObject
-import adapters.output.ConsoleSwaggerSchemaOutputStream
-import adapters.output.SwaggerSchemaOutputStream
+import io.github.joss.adapters.exceptions.JsonIsNotAnObject
+import io.github.joss.adapters.output.ConsoleSwaggerSchemaOutputStream
+import io.github.joss.adapters.output.SwaggerSchemaOutputStream
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 
