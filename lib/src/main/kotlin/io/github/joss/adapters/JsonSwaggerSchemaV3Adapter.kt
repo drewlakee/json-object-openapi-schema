@@ -1,6 +1,6 @@
 package io.github.joss.adapters
 
-import io.github.joss.adapters.exceptions.JsonIsNotAnObject
+import io.github.joss.adapters.exceptions.JsonIsNotAnObjectException
 import io.github.joss.adapters.output.ConsoleSwaggerSchemaOutputStream
 import io.github.joss.adapters.output.SwaggerSchemaOutputStream
 import com.fasterxml.jackson.databind.JsonNode
@@ -15,7 +15,7 @@ open class JsonSwaggerSchemaV3Adapter(
         val node = parse(json)
 
         if (!node.isObject) {
-            throw JsonIsNotAnObject()
+            throw JsonIsNotAnObjectException()
         }
 
         if (node.size() == 0) {
@@ -28,6 +28,6 @@ open class JsonSwaggerSchemaV3Adapter(
     private fun parse(json: String): JsonNode = try {
         jsonMapper.readTree(json)
     } catch (e: Exception) {
-        throw JsonIsNotAnObject()
+        throw JsonIsNotAnObjectException()
     }
 }

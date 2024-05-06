@@ -1,6 +1,6 @@
 package io.github.joss.adapters
 
-import io.github.joss.adapters.exceptions.JsonIsNotAnObject
+import io.github.joss.adapters.exceptions.JsonIsNotAnObjectException
 import io.github.joss.adapters.output.SwaggerSchemaOutputStream
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -27,6 +27,6 @@ class JsonSwaggerSchemaV3AdapterTest {
     @ParameterizedTest
     @ValueSource(strings = ["1000", "1000.0", "string", "true", "c"])
     fun `Throw exception if json is valid and it's not an object itself`(value: String) {
-        assertThrows<JsonIsNotAnObject> { sut.convert(value) }
+        assertThrows<JsonIsNotAnObjectException> { sut.convert(value) }
     }
 }
