@@ -1,4 +1,4 @@
-package io.github.joss
+package adapters
 
 interface JsonSwaggerSchemaAdapter {
     fun convert(json: String)
