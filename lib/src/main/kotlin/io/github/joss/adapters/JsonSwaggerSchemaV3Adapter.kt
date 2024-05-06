@@ -19,7 +19,7 @@ open class JsonSwaggerSchemaV3Adapter(
         }
 
         if (node.size() == 0) {
-            outputStream.flush("Model:")
+            outputStream.flush("Schema:")
         }
 
         outputStream.flush(json)

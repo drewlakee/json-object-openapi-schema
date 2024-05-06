@@ -20,7 +20,7 @@ class JsonSwaggerSchemaV3AdapterTest {
 
         sut.convert(value)
 
-        val expected = "Model:"
+        val expected = "Schema:"
         verify(output).flush(expected)
     }
 
