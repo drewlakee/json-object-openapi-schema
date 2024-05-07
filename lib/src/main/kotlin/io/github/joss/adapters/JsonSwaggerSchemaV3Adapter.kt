@@ -5,6 +5,7 @@ import io.github.joss.adapters.output.ConsoleSwaggerSchemaOutputStream
 import io.github.joss.adapters.output.SwaggerSchemaOutputStream
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.joss.adapters.definitions.*
 
 open class JsonSwaggerSchemaV3Adapter(
     private val outputStream: SwaggerSchemaOutputStream = ConsoleSwaggerSchemaOutputStream(),
@@ -21,6 +22,8 @@ open class JsonSwaggerSchemaV3Adapter(
         if (node.size() == 0) {
             outputStream.flush("Schema:")
         }
+
+        // getSchemaProperties(node)
 
         outputStream.flush(json)
     }
