@@ -2,6 +2,8 @@ package io.github.joss.adapters
 
 import io.github.joss.adapters.exceptions.JsonIsNotAnObjectException
 import io.github.joss.adapters.output.SwaggerSchemaOutputStream
+import io.github.joss.readJsonResourceAsText
+import io.github.joss.readYamlSchemaResourceAsText
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
@@ -28,5 +30,15 @@ class JsonSwaggerSchemaV3AdapterTest {
     @ValueSource(strings = ["1000", "1000.0", "string", "true", "c"])
     fun `Throw exception if json is valid and it's not an object itself`(value: String) {
         assertThrows<JsonIsNotAnObjectException> { sut.convert(value) }
+    }
+
+    @Test
+    fun `Convert json object without nested objects into a schema`() {
+        val json = readJsonResourceAsText("object-0.json", this::class.java)
+
+        sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-0.yaml", this::class.java)
+        verify(output).flush(expected)
     }
 }
