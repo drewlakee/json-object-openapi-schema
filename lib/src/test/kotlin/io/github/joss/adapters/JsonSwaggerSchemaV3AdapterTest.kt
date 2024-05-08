@@ -30,7 +30,7 @@ class JsonSwaggerSchemaV3AdapterTest {
     }
 
     @Test
-    fun `Convert json object without nested objects into a schema`() {
+    fun `Convert json object without nested objects into a swagger schema`() {
         val json = readJsonResourceAsText("object-0.json", this::class.java)
 
         sut.convert(json)

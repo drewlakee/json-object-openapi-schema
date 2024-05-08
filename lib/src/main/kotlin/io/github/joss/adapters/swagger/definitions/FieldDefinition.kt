@@ -1,9 +1,9 @@
-package io.github.joss.adapters.definitions
+package io.github.joss.adapters.swagger.definitions
 
 data class FieldDefinition(
     val fieldName: String,
     val type: PropertyType,
-): SwaggerSchemaPropertyDefinition {
+): PropertyDefinition {
 
     override fun fieldName(): String {
         return fieldName
