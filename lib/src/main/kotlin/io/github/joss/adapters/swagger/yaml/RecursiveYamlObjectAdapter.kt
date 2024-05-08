@@ -15,10 +15,17 @@ class RecursiveYamlObjectAdapter(
 ): YamlObjectAdapter {
 
     override fun convert(objectDefinitions: List<PropertyDefinition>): String {
-        val properties = objectDefinitions.map {
-            when (it) {
-                is ArrayDefinition -> TODO()
-                is FieldDefinition -> Pair(
+        val properties = objectDefinitions.map { toProperty(it) }.toList()
+        val obj = Pair("Schema", ObjectProperty(properties = properties.toMap()))
+        val schema = mapOf(obj)
+        return yamlMapper.writeValueAsString(schema).trimIndent()
+    }
+
+    private fun toProperty(it: PropertyDefinition): Pair<String, PojoProperty> {
+        return when (it) {
+            is ArrayDefinition -> TODO()
+            is FieldDefinition -> {
+                return Pair(
                     it.fieldName,
                     when (it.type) {
                         PropertyType.STRING -> StringProperty()
@@ -26,15 +33,20 @@ class RecursiveYamlObjectAdapter(
                         PropertyType.NUMBER -> NumberProperty()
                         PropertyType.BOOLEAN -> BooleanProperty()
                         PropertyType.ARRAY -> TODO()
-                        PropertyType.OBJECT -> TODO()
+                        PropertyType.OBJECT -> throw IllegalStateException(
+                            "Property definition of object is expected to be as another type. " +
+                                    "See #${ObjectDefinition::class.simpleName}"
+                        )
                     }
                 )
-                is ObjectDefinition -> TODO()
             }
-        }.toList()
+            is ObjectDefinition -> Pair(it.fieldName, getObjectProperty(it))
+        }
+    }
 
-        val obj = Pair("Schema", ObjectProperty(properties = properties.toMap()))
-        val schema = mapOf(obj)
-        return yamlMapper.writeValueAsString(schema).trimIndent()
+    private fun getObjectProperty(objectDefinition: ObjectDefinition): ObjectProperty {
+        return ObjectProperty(
+            properties = objectDefinition.properties.associate { toProperty(it) }
+        )
     }
 }
