@@ -1,0 +1,22 @@
+Schema:
+  type: object
+  properties:
+    nested_object1:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        percentage:
+          type: number
+        nested_object3:
+          type: object
+          properties:
+            object_id:
+              type: integer
+    nested_object2:
+      type: object
+      properties:
+        a:
+          type: integer
+        b:
+          type: string

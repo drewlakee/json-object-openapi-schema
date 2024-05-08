@@ -48,4 +48,14 @@ class JsonSwaggerObjectSchemaAdapterTest {
         val expected = readYamlSchemaResourceAsText("schema-1.yaml", this::class.java)
         verify(output).flush(expected)
     }
+
+    @Test
+    fun `Convert json object with deep nested objects into a swagger schema`() {
+        val json = readJsonResourceAsText("object-2.json", this::class.java)
+
+        sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-2.yaml", this::class.java)
+        verify(output).flush(expected)
+    }
 }

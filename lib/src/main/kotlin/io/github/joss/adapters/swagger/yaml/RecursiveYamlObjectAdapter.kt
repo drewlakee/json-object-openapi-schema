@@ -18,7 +18,7 @@ class RecursiveYamlObjectAdapter(
         val properties = objectDefinitions.map { toProperty(it) }.toList()
         val obj = Pair("Schema", ObjectProperty(properties = properties.toMap()))
         val schema = mapOf(obj)
-        return yamlMapper.writeValueAsString(schema).trimIndent()
+        return yamlMapper.writeValueAsString(schema)
     }
 
     private fun toProperty(it: PropertyDefinition): Pair<String, PojoProperty> {
