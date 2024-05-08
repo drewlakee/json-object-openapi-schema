@@ -1,5 +1,6 @@
 package io.github.joss.adapters
 
+import io.github.joss.adapters.exceptions.JsonIsEmptyObject
 import io.github.joss.adapters.exceptions.JsonIsNotAnObjectException
 import io.github.joss.adapters.output.SwaggerSchemaOutputStream
 import io.github.joss.readJsonResourceAsText
@@ -17,13 +18,9 @@ class JsonSwaggerSchemaV3AdapterTest {
     private val sut = JsonSwaggerSchemaV3Adapter(output)
 
     @Test
-    fun `Get empty schema if json is valid and object is empty itself`() {
+    fun `Throw exception if json is valid and object is empty itself`() {
         val value = "{}"
-
-        sut.convert(value)
-
-        val expected = "Schema:"
-        verify(output).flush(expected)
+        assertThrows<JsonIsEmptyObject> { sut.convert(value) }
     }
 
     @ParameterizedTest
