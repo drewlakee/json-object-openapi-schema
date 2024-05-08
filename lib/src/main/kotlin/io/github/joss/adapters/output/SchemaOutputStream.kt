@@ -1,5 +1,5 @@
 package io.github.joss.adapters.output
 
-interface SwaggerSchemaOutputStream {
+interface SchemaOutputStream {
     fun flush(schema: String)
 }

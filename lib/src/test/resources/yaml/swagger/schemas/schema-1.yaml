@@ -1,0 +1,12 @@
+Schema:
+  type: object
+  properties:
+    integer_value:
+      type: integer
+    object_value:
+      type: object
+      properties:
+        a:
+          type: integer
+        b:
+          type: string

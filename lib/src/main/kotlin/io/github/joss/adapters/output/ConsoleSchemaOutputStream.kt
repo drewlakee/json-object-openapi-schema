@@ -1,6 +1,6 @@
 package io.github.joss.adapters.output
 
-class ConsoleSwaggerSchemaOutputStream: SwaggerSchemaOutputStream {
+class ConsoleSchemaOutputStream: SchemaOutputStream {
 
     override fun flush(schema: String) {
         println(schema)

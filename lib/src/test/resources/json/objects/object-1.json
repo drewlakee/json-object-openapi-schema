@@ -1,0 +1,7 @@
+{
+  "integer_value": 1,
+  "object_value": {
+    "a": 2,
+    "b": "value"
+  }
+}
