@@ -47,7 +47,7 @@ class RecursiveSchemaDefinitionExtractor: SchemaDefinitionExtractor {
                 val secondTypeIsObject = element.type() == PropertyType.OBJECT
                 if (firstTypeIsObject && secondTypeIsObject) {
                     throw JsonGenericArrayTypeException(
-                        "Json array node \"$fieldName[]\" expected to by strongly typed, expected [(OBJECT) $firstElement] but there's also [(OBJECT) $secondElement]"
+                        "Json array node \"$fieldName[]\" expected to be strongly typed, expected [(OBJECT) $firstElement] but there's also [(OBJECT) $secondElement]"
                     )
                 }
 
