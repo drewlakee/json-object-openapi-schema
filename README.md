@@ -1,6 +1,6 @@
-# Json-object to Swagger-schema (OpenAPI) Converting Kotlin Library 
+# Json-object to OpenAPI Schema Converting Kotlin Library 
 
-Converts a json object into a swagger schema
+Converts a json object into an OpenAPI schema in YAML format
 
 Supported types:
 - arrays
@@ -37,7 +37,7 @@ Check specification rendering here: https://editor.swagger.io/
 
 ```kotlin
 fun main() {
-    val jsonSwaggerObjectSchemaAdapter = JsonSwaggerObjectSchemaAdapter()
+    val adapter = JsonOpenApiObjectSchemaAdapter()
     val json = """
             {
               "name": "London",
@@ -51,7 +51,7 @@ fun main() {
             }
     """
     // by default prints result in console
-    jsonSwaggerObjectSchemaAdapter.convert(json)
+    adapter.convert(json)
 }
 ```
 
