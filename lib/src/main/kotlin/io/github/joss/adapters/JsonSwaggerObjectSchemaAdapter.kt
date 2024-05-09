@@ -2,7 +2,7 @@ package io.github.joss.adapters
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.joss.adapters.exceptions.JsonIsEmptyObject
+import io.github.joss.adapters.exceptions.JsonEmptyObjectException
 import io.github.joss.adapters.exceptions.JsonIsNotAnObjectException
 import io.github.joss.adapters.output.ConsoleSchemaOutputStream
 import io.github.joss.adapters.output.SchemaOutputStream
@@ -24,7 +24,7 @@ open class JsonSwaggerObjectSchemaAdapter(
         if (!node.isObject) {
             throw JsonIsNotAnObjectException()
         } else if (node.size() == 0) {
-            throw JsonIsEmptyObject()
+            throw JsonEmptyObjectException()
         }
 
         val objectDefinitions = objectDefinitionExtractor.getObjectDefinitions(node).propertyDefinitions

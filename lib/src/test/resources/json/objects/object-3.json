@@ -1,0 +1,6 @@
+{
+  "integer_array": [1, 2, 3],
+  "float_array": [1.0, 4.2, 5.6],
+  "string_array": ["string", "str"],
+  "boolean_array": [true, false, true]
+}

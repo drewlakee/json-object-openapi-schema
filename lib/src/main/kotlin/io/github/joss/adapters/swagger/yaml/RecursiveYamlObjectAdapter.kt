@@ -23,7 +23,8 @@ class RecursiveYamlObjectAdapter(
 
     private fun toProperty(it: PropertyDefinition): Pair<String, PojoProperty> {
         return when (it) {
-            is ArrayDefinition -> TODO()
+            is ArrayDefinition -> Pair(it.fieldName, getArrayProperty(it))
+            is ObjectDefinition -> Pair(it.fieldName, getObjectProperty(it))
             is FieldDefinition -> {
                 return Pair(
                     it.fieldName,
@@ -32,7 +33,10 @@ class RecursiveYamlObjectAdapter(
                         PropertyType.INTEGER -> IntegerProperty()
                         PropertyType.NUMBER -> NumberProperty()
                         PropertyType.BOOLEAN -> BooleanProperty()
-                        PropertyType.ARRAY -> TODO()
+                        PropertyType.ARRAY -> throw IllegalStateException(
+                            "Property definition of array is expected to be as another type. " +
+                                    "See #${ArrayDefinition::class.simpleName}"
+                        )
                         PropertyType.OBJECT -> throw IllegalStateException(
                             "Property definition of object is expected to be as another type. " +
                                     "See #${ObjectDefinition::class.simpleName}"
@@ -40,8 +44,13 @@ class RecursiveYamlObjectAdapter(
                     }
                 )
             }
-            is ObjectDefinition -> Pair(it.fieldName, getObjectProperty(it))
         }
+    }
+
+    private fun getArrayProperty(arrayDefinition: ArrayDefinition): ArrayProperty {
+        return ArrayProperty(
+            items = toProperty(arrayDefinition.itemsDefinition).second
+        )
     }
 
     private fun getObjectProperty(objectDefinition: ObjectDefinition): ObjectProperty {
