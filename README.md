@@ -1,4 +1,4 @@
-# Json-object to OpenAPI Schema Converting Kotlin Library 
+# A Kotlin library for converting Json-object into OpenAPI Schema
 
 Converts a json object into an OpenAPI schema in YAML format
 
