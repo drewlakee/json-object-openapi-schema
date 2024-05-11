@@ -3,20 +3,21 @@ package io.github.jooas.adapters
 import io.github.jooas.adapters.exceptions.JsonEmptyObjectException
 import io.github.jooas.adapters.exceptions.JsonGenericArrayTypeException
 import io.github.jooas.adapters.exceptions.JsonIsNotAnObjectException
-import io.github.jooas.adapters.output.SchemaOutputStream
+import io.github.jooas.adapters.input.JsonTextStream
+import io.github.jooas.adapters.output.ConsoleSchemaOutputStream
 import io.github.jooas.readJsonResourceAsText
 import io.github.jooas.readYamlSchemaResourceAsText
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
+import kotlin.test.assertEquals
 
 class JsonOpenApiObjectSchemaAdapterTest {
 
-    private val output = mock(SchemaOutputStream::class.java)
-    private val sut = JsonOpenApiObjectSchemaAdapter(output)
+    private val sut = JsonOpenApiObjectSchemaAdapter()
 
     @Test
     fun `Throw exception if json is valid and object is empty itself`() {
@@ -34,50 +35,50 @@ class JsonOpenApiObjectSchemaAdapterTest {
     fun `Convert json object without nested objects into a openapi schema`() {
         val json = readJsonResourceAsText("object-0.json", this::class.java)
 
-        sut.convert(json)
+        val actual = sut.convert(json)
 
         val expected = readYamlSchemaResourceAsText("schema-0.yaml", this::class.java)
-        verify(output).flush(expected)
+        assertEquals(expected, actual)
     }
 
     @Test
     fun `Convert json object with nested object into a openapi schema`() {
         val json = readJsonResourceAsText("object-1.json", this::class.java)
 
-        sut.convert(json)
+        val actual = sut.convert(json)
 
         val expected = readYamlSchemaResourceAsText("schema-1.yaml", this::class.java)
-        verify(output).flush(expected)
+        assertEquals(expected, actual)
     }
 
     @Test
     fun `Convert json object with deep nested objects into a openapi schema`() {
         val json = readJsonResourceAsText("object-2.json", this::class.java)
 
-        sut.convert(json)
+        val actual = sut.convert(json)
 
         val expected = readYamlSchemaResourceAsText("schema-2.yaml", this::class.java)
-        verify(output).flush(expected)
+        assertEquals(expected, actual)
     }
 
     @Test
     fun `Convert json object with primitive type arrays into a openapi schema`() {
         val json = readJsonResourceAsText("object-3.json", this::class.java)
 
-        sut.convert(json)
+        val actual = sut.convert(json)
 
         val expected = readYamlSchemaResourceAsText("schema-3.yaml", this::class.java)
-        verify(output).flush(expected)
+        assertEquals(expected, actual)
     }
 
     @Test
     fun `Convert json object with object arrays into a openapi schema`() {
         val json = readJsonResourceAsText("object-4.json", this::class.java)
 
-        sut.convert(json)
+        val actual = sut.convert(json)
 
         val expected = readYamlSchemaResourceAsText("schema-4.yaml", this::class.java)
-        verify(output).flush(expected)
+        assertEquals(expected, actual)
     }
 
     @Test
@@ -96,5 +97,16 @@ class JsonOpenApiObjectSchemaAdapterTest {
     fun `Throw exception if json object with generic object array (float, string)`() {
         val json = readJsonResourceAsText("object-7.json", this::class.java)
         assertThrows<JsonGenericArrayTypeException> { sut.convert(json) }
+    }
+
+    @Test
+    fun `Pass-through input-output json-text to console`() {
+        val jsonTextStream = JsonTextStream(readJsonResourceAsText("object-0.json", this::class.java))
+        val consoleOutputStream = spy(ConsoleSchemaOutputStream())
+
+        sut.convert(jsonTextStream, consoleOutputStream)
+
+        val expected = readYamlSchemaResourceAsText("schema-0.yaml", this::class.java)
+        verify(consoleOutputStream).flush(expected)
     }
 }

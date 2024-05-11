@@ -22,6 +22,7 @@ dependencies {
     // Use the JUnit 5 integration.
     testImplementation(libs.junit.jupiter.engine)
     testImplementation("org.mockito:mockito-core:3.+")
+    testImplementation("org.mockito:mockito-inline:2.13.0")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
