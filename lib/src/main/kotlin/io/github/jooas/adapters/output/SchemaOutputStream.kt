@@ -1,5 +1,5 @@
 package io.github.jooas.adapters.output
 
-interface SchemaOutputStream {
+sealed interface SchemaOutputStream {
     fun flush(schema: String)
 }

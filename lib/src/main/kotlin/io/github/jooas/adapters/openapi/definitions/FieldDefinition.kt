@@ -5,11 +5,7 @@ data class FieldDefinition(
     val type: PropertyType,
 ): PropertyDefinition {
 
-    override fun fieldName(): String {
-        return fieldName
-    }
-
-    override fun type(): PropertyType {
-        return type
-    }
+    override fun fieldName() = fieldName
+    override fun type() = type
+    override fun definition() = this
 }

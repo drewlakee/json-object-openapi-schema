@@ -5,11 +5,7 @@ data class ArrayDefinition(
     val itemsDefinition: PropertyDefinition,
 ): PropertyDefinition {
 
-    override fun fieldName(): String {
-        return fieldName
-    }
-
-    override fun type(): PropertyType {
-        return PropertyType.ARRAY
-    }
+    override fun fieldName() = fieldName
+    override fun type() = PropertyType.ARRAY
+    override fun definition() = this
 }

@@ -1,0 +1,15 @@
+Schema:
+  type: object
+  properties:
+    integer_value:
+      type: integer
+      example: 1
+    float_value:
+      type: number
+      example: 1.0
+    string_value:
+      type: string
+      example: string
+    boolean_value:
+      type: boolean
+      example: true

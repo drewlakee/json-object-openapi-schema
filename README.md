@@ -7,6 +7,9 @@ Supported types:
 - objects
 - primitives
 
+Features:
+- values from json as example
+
 ```json
 {
   "integer_value": 1,
@@ -37,7 +40,7 @@ Check specification rendering here: https://editor.swagger.io/
 
 ```kotlin
 fun main() {
-    val adapter = JsonOpenApiObjectSchemaAdapter()
+    var adapter = AdaptersFactory.createObjectAdapter()
     val json = """
             {
               "name": "London",
@@ -50,9 +53,14 @@ fun main() {
               "localtime": "2021-02-21 8:42"
             }
     """
-    // by default prints result in console
-    adapter.convert(json)
 }
+```
+
+### Result at need
+
+```kotlin
+    val result: String = adapter.convert(json)
+    println(result)
 ```
 
 ```yaml
@@ -75,4 +83,53 @@ Schema:
       type: integer
     localtime:
       type: string
+```
+
+### Feature toggles for adapter
+
+```kotlin
+    adapter = AdaptersFactory.createObjectAdapter(
+        Pair(Features.Feature.WITH_EXAMPLE, true)
+    )
+```
+
+### Custom interface-friendly I/O streams
+
+```kotlin
+    adapter.convert(
+        // custom suppliers (can be files, API-calls)
+        input = JsonTextStream(text = json),
+        // prints resulting yaml in console
+        output = ConsoleSchemaOutputStream()
+    )
+```
+
+```yaml
+Schema:
+  type: object
+  properties:
+    name:
+      type: string
+      example: London
+    region:
+      type: string
+      example: "City of London, Greater London"
+    country:
+      type: string
+      example: United Kingdom
+    lat:
+      type: number
+      example: 51.52
+    lon:
+      type: number
+      example: -0.11
+    tz_id:
+      type: string
+      example: Europe/London
+    localtime_epoch:
+      type: integer
+      example: 1613896955
+    localtime:
+      type: string
+      example: 2021-02-21 8:42
 ```
