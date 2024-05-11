@@ -7,6 +7,9 @@ Supported types:
 - objects
 - primitives
 
+Features:
+- values from json as example
+
 ```json
 {
   "integer_value": 1,
@@ -75,4 +78,59 @@ Schema:
       type: integer
     localtime:
       type: string
+```
+
+### With example from source json
+
+```kotlin
+fun main() {
+    val adapter = JsonOpenApiObjectSchemaAdapter(
+        objectDefinitionExtractor = RecursiveSchemaDefinitionExtractor(
+            Features(mapOf(Features.Feature.WITH_EXAMPLE to true))
+        )
+    )
+    val json = """
+            {
+              "name": "London",
+              "region": "City of London, Greater London",
+              "country": "United Kingdom",
+              "lat": 51.52,
+              "lon": -0.11,
+              "tz_id": "Europe/London",
+              "localtime_epoch": 1613896955,
+              "localtime": "2021-02-21 8:42"
+            }
+    """
+    println(adapter.convert(json))
+}
+```
+
+```yaml
+Schema:
+  type: object
+  properties:
+    name:
+      type: string
+      example: London
+    region:
+      type: string
+      example: "City of London, Greater London"
+    country:
+      type: string
+      example: United Kingdom
+    lat:
+      type: number
+      example: 51.52
+    lon:
+      type: number
+      example: -0.11
+    tz_id:
+      type: string
+      example: Europe/London
+    localtime_epoch:
+      type: integer
+      example: 1613896955
+    localtime:
+      type: string
+      example: 2021-02-21 8:42
 ```
