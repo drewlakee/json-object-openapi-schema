@@ -40,7 +40,7 @@ Check specification rendering here: https://editor.swagger.io/
 
 ```kotlin
 fun main() {
-    val adapter = JsonOpenApiObjectSchemaAdapter()
+    var adapter = AdaptersFactory.createObjectAdapter()
     val json = """
             {
               "name": "London",
@@ -53,9 +53,14 @@ fun main() {
               "localtime": "2021-02-21 8:42"
             }
     """
-    // by default prints result in console
-    adapter.convert(json)
 }
+```
+
+### Result at need
+
+```kotlin
+    val result: String = adapter.convert(json)
+    println(result)
 ```
 
 ```yaml
@@ -80,29 +85,23 @@ Schema:
       type: string
 ```
 
-### With example from source json
+### Feature toggles for adapter
 
 ```kotlin
-fun main() {
-    val adapter = JsonOpenApiObjectSchemaAdapter(
-        objectDefinitionExtractor = RecursiveSchemaDefinitionExtractor(
-            Features(mapOf(Features.Feature.WITH_EXAMPLE to true))
-        )
+    adapter = AdaptersFactory.createObjectAdapter(
+        Pair(Features.Feature.WITH_EXAMPLE, true)
     )
-    val json = """
-            {
-              "name": "London",
-              "region": "City of London, Greater London",
-              "country": "United Kingdom",
-              "lat": 51.52,
-              "lon": -0.11,
-              "tz_id": "Europe/London",
-              "localtime_epoch": 1613896955,
-              "localtime": "2021-02-21 8:42"
-            }
-    """
-    println(adapter.convert(json))
-}
+```
+
+### Custom interface-friendly I/O streams
+
+```kotlin
+    adapter.convert(
+        // custom suppliers (can be files, API-calls)
+        input = JsonTextStream(text = json),
+        // prints resulting yaml in console
+        output = ConsoleSchemaOutputStream()
+    )
 ```
 
 ```yaml
