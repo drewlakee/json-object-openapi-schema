@@ -12,4 +12,6 @@ data class FieldDefinition(
     override fun type(): PropertyType {
         return type
     }
+
+    override fun definition() = this
 }

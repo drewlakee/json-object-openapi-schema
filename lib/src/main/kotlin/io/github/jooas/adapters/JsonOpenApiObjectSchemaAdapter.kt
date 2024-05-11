@@ -15,7 +15,6 @@ open class JsonOpenApiObjectSchemaAdapter(
     private val jsonMapper: ObjectMapper = ObjectMapper(),
     private val objectDefinitionExtractor: SchemaDefinitionExtractor = RecursiveSchemaDefinitionExtractor(),
     private val yamlObjectAdapter: YamlObjectAdapter = RecursiveYamlObjectAdapter(),
-    private val features: AdapterFeatures = AdapterFeatures()
 ): JsonOpenApiSchemaAdapter {
 
     override fun convert(json: String): String {

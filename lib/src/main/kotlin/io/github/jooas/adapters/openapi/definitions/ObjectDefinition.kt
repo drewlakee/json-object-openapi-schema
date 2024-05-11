@@ -12,4 +12,6 @@ data class ObjectDefinition(
     override fun type(): PropertyType {
         return PropertyType.OBJECT
     }
+
+    override fun definition() = this
 }

@@ -4,6 +4,7 @@ import io.github.jooas.adapters.exceptions.JsonEmptyObjectException
 import io.github.jooas.adapters.exceptions.JsonGenericArrayTypeException
 import io.github.jooas.adapters.exceptions.JsonIsNotAnObjectException
 import io.github.jooas.adapters.input.JsonTextStream
+import io.github.jooas.adapters.openapi.RecursiveSchemaDefinitionExtractor
 import io.github.jooas.adapters.output.ConsoleSchemaOutputStream
 import io.github.jooas.readJsonResourceAsText
 import io.github.jooas.readYamlSchemaResourceAsText
@@ -109,4 +110,58 @@ class JsonOpenApiObjectSchemaAdapterTest {
         val expected = readYamlSchemaResourceAsText("schema-0.yaml", this::class.java)
         verify(consoleOutputStream).flush(expected)
     }
+
+    @Test
+    fun `Convert json object without nested objects into a openapi schema with example`() {
+        val sut = adapterWithExample()
+
+        val json = readJsonResourceAsText("object-0.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-0-with-example.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Convert json object with nested object into a openapi schema with example`() {
+        val sut = adapterWithExample()
+
+        val json = readJsonResourceAsText("object-1.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-1-with-example.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Convert json object with extra string field into a openapi schema with example`() {
+        val sut = adapterWithExample()
+
+        val json = readJsonResourceAsText("object-8.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-8-with-example.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Convert json object with object arrays into a openapi schema with example`() {
+        val sut = adapterWithExample()
+
+        val json = readJsonResourceAsText("object-4.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-4-with-example.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    private fun adapterWithExample() = JsonOpenApiObjectSchemaAdapter(
+        objectDefinitionExtractor = RecursiveSchemaDefinitionExtractor(
+            Features(mapOf(Features.Feature.WITH_EXAMPLE to true))
+        )
+    )
 }

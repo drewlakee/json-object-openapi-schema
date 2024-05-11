@@ -1,0 +1,6 @@
+Schema:
+  type: object
+  properties:
+    string_value:
+      type: string
+      example: Extra string

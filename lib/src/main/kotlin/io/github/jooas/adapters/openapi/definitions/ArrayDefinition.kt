@@ -12,4 +12,6 @@ data class ArrayDefinition(
     override fun type(): PropertyType {
         return PropertyType.ARRAY
     }
+
+    override fun definition() = this
 }
