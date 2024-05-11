@@ -1,18 +1,11 @@
 package io.github.jooas.adapters.openapi.yaml
 
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
 import io.github.jooas.adapters.openapi.definitions.*
 import io.github.jooas.adapters.openapi.yaml.pojo.*
 
 class RecursiveYamlObjectAdapter(
-    private val yamlMapper: ObjectMapper = ObjectMapper(
-        YAMLFactory()
-            .enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
-            .disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
-    ).setSerializationInclusion(JsonInclude.Include.NON_NULL)
+    private val yamlMapper: ObjectMapper
 ): YamlObjectAdapter {
 
     override fun convert(objectDefinitions: List<PropertyDefinition>): String {

@@ -5,16 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.jooas.adapters.exceptions.JsonEmptyObjectException
 import io.github.jooas.adapters.exceptions.JsonIsNotAnObjectException
 import io.github.jooas.adapters.input.JsonInputStream
-import io.github.jooas.adapters.openapi.RecursiveSchemaDefinitionExtractor
 import io.github.jooas.adapters.openapi.SchemaDefinitionExtractor
-import io.github.jooas.adapters.openapi.yaml.RecursiveYamlObjectAdapter
 import io.github.jooas.adapters.openapi.yaml.YamlObjectAdapter
 import io.github.jooas.adapters.output.SchemaOutputStream
 
 open class JsonOpenApiObjectSchemaAdapter(
-    private val jsonMapper: ObjectMapper = ObjectMapper(),
-    private val objectDefinitionExtractor: SchemaDefinitionExtractor = RecursiveSchemaDefinitionExtractor(),
-    private val yamlObjectAdapter: YamlObjectAdapter = RecursiveYamlObjectAdapter(),
+    private val jsonMapper: ObjectMapper,
+    private val objectDefinitionExtractor: SchemaDefinitionExtractor,
+    private val yamlObjectAdapter: YamlObjectAdapter,
 ): JsonOpenApiSchemaAdapter {
 
     override fun convert(json: String): String {

@@ -4,7 +4,6 @@ import io.github.jooas.adapters.exceptions.JsonEmptyObjectException
 import io.github.jooas.adapters.exceptions.JsonGenericArrayTypeException
 import io.github.jooas.adapters.exceptions.JsonIsNotAnObjectException
 import io.github.jooas.adapters.input.JsonTextStream
-import io.github.jooas.adapters.openapi.RecursiveSchemaDefinitionExtractor
 import io.github.jooas.adapters.output.ConsoleSchemaOutputStream
 import io.github.jooas.readJsonResourceAsText
 import io.github.jooas.readYamlSchemaResourceAsText
@@ -18,7 +17,7 @@ import kotlin.test.assertEquals
 
 class JsonOpenApiObjectSchemaAdapterTest {
 
-    private val sut = JsonOpenApiObjectSchemaAdapter()
+    private val sut = AdaptersFactory.createObjectAdapter()
 
     @Test
     fun `Throw exception if json is valid and object is empty itself`() {
@@ -113,7 +112,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
 
     @Test
     fun `Convert json object without nested objects into a openapi schema with example`() {
-        val sut = adapterWithExample()
+        val sut = adapterWithExampleFeature()
 
         val json = readJsonResourceAsText("object-0.json", this::class.java)
 
@@ -125,7 +124,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
 
     @Test
     fun `Convert json object with nested object into a openapi schema with example`() {
-        val sut = adapterWithExample()
+        val sut = adapterWithExampleFeature()
 
         val json = readJsonResourceAsText("object-1.json", this::class.java)
 
@@ -137,7 +136,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
 
     @Test
     fun `Convert json object with extra string field into a openapi schema with example`() {
-        val sut = adapterWithExample()
+        val sut = adapterWithExampleFeature()
 
         val json = readJsonResourceAsText("object-8.json", this::class.java)
 
@@ -149,7 +148,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
 
     @Test
     fun `Convert json object with object arrays into a openapi schema with example`() {
-        val sut = adapterWithExample()
+        val sut = adapterWithExampleFeature()
 
         val json = readJsonResourceAsText("object-4.json", this::class.java)
 
@@ -159,9 +158,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
         assertEquals(expected, actual)
     }
 
-    private fun adapterWithExample() = JsonOpenApiObjectSchemaAdapter(
-        objectDefinitionExtractor = RecursiveSchemaDefinitionExtractor(
-            Features(mapOf(Features.Feature.WITH_EXAMPLE to true))
-        )
+    private fun adapterWithExampleFeature() = AdaptersFactory.createObjectAdapter(
+        Pair(Features.Feature.WITH_EXAMPLE, true),
     )
 }

@@ -7,7 +7,7 @@ import io.github.jooas.adapters.exceptions.JsonGenericArrayTypeException
 import io.github.jooas.adapters.openapi.definitions.*
 
 class RecursiveSchemaDefinitionExtractor(
-    private val features: Features = Features.NO_FEATURES
+    private val features: Features
 ): SchemaDefinitionExtractor {
 
     override fun getObjectDefinitions(node: JsonNode): DefinitionsExtract {
