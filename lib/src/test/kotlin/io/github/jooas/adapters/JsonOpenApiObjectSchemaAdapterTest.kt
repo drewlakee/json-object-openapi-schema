@@ -229,6 +229,18 @@ class JsonOpenApiObjectSchemaAdapterTest {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `Convert json object with object deduplication reference into a openapi schema with components`() {
+        val sut = adapterWithObjectReferenceFeature()
+
+        val json = readJsonResourceAsText("object-11.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-11-object-reference.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
     private fun defaultAdapter() = AdaptersFactory.createObjectAdapter()
 
     private fun adapterWithExampleFeature() =

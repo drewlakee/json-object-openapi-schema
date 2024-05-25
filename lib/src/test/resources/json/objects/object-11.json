@@ -1,0 +1,10 @@
+{
+  "object": {
+    "int": 1,
+    "str": "value1"
+  },
+  "same_object": {
+    "int": 2,
+    "str": "value2"
+  }
+}
