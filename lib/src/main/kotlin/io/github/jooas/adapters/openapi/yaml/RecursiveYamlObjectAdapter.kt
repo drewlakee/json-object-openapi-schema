@@ -1,56 +1,156 @@
 package io.github.jooas.adapters.openapi.yaml
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.jooas.adapters.Features
 import io.github.jooas.adapters.openapi.definitions.*
 import io.github.jooas.adapters.openapi.yaml.pojo.*
+import io.github.jooas.adapters.openapi.yaml.wrappers.SchemaComponents
+
+private data class ObjectReferences(
+    val references: Map<ObjectDefinition, Map<String, ObjectReferenceProperty>>,
+    val objectSchemas: Map<String, PojoProperty>,
+) {
+    companion object {
+        fun empty() = ObjectReferences(mapOf(), mapOf())
+    }
+}
 
 class RecursiveYamlObjectAdapter(
-    private val yamlMapper: ObjectMapper
-): YamlObjectAdapter {
-
+    private val yamlMapper: ObjectMapper,
+    private val features: Features,
+) : YamlObjectAdapter {
     override fun convert(objectDefinitions: List<PropertyDefinition>): String {
-        val properties = objectDefinitions.map { toProperty(it) }.toList()
-        val obj = Pair("Schema", ObjectProperty(properties = properties.toMap()))
-        val schema = mapOf(obj)
-        return yamlMapper.writeValueAsString(schema)
+        val objectReferences =
+            if (isObjectReferenceEnabled()) {
+                extractObjectReferencesInDepth(objectDefinitions)
+            } else {
+                ObjectReferences.empty()
+            }
+
+        val properties =
+            if (isObjectReferenceEnabled()) {
+                replaceObjectReferencesInPlane(
+                    objectDefinitions,
+                    objectReferences.references,
+                )
+            } else {
+                objectDefinitions.map { toProperty(it) }.toList()
+            }
+
+        val rootSchema = mapOf(Pair("Schema", ObjectProperty(properties = properties.toMap())))
+
+        if (isObjectReferenceEnabled()) {
+            return yamlMapper.writeValueAsString(
+                SchemaComponents(rootSchema, objectReferences.objectSchemas),
+            )
+        }
+
+        return yamlMapper.writeValueAsString(rootSchema)
+    }
+
+    private fun replaceObjectReferencesInPlane(
+        objectDefinitions: List<PropertyDefinition>,
+        objectReferences: Map<ObjectDefinition, Map<String, ObjectReferenceProperty>>,
+    ): List<Pair<String, PojoProperty>> {
+        return objectDefinitions
+            .map {
+                when (it) {
+                    is ObjectDefinition -> {
+                        val ref = objectReferences[it]!!.entries.first()
+                        Pair(ref.key, ref.value)
+                    }
+                    else -> toProperty(it)
+                }
+            }
+            .toList()
+    }
+
+    private fun extractObjectReferencesInDepth(objectDefinitions: List<PropertyDefinition>): ObjectReferences {
+        val refs: MutableMap<ObjectDefinition, Map<String, ObjectReferenceProperty>> = LinkedHashMap()
+        val objectSchemas: MutableMap<String, PojoProperty> = LinkedHashMap()
+        objectDefinitions.forEach { recursiveExtractObjects(it, refs, objectSchemas) }
+        return ObjectReferences(refs, objectSchemas)
+    }
+
+    private fun recursiveExtractObjects(
+        it: PropertyDefinition,
+        refs: MutableMap<ObjectDefinition, Map<String, ObjectReferenceProperty>>,
+        objectSchemas: MutableMap<String, PojoProperty>,
+    ) {
+        when (it) {
+            is ObjectDefinition -> {
+                val objectProperty = toProperty(it).second as ObjectProperty
+                val schemaName =
+                    SchemaNameGenerator.tryPascalCaseWhile(it.fieldName) { schemaName: String ->
+                        objectSchemas.containsKey(schemaName)
+                    }
+                objectSchemas[schemaName] = objectProperty
+                val objectSchema = ObjectReferenceProperty(schemaName)
+                refs[it] = mapOf(it.fieldName to objectSchema)
+
+                it.properties.forEach { recursiveExtractObjects(it, refs, objectSchemas) }
+
+                val pojoProperties: MutableMap<String, PojoProperty> = LinkedHashMap()
+                it.properties.forEach {
+                    when (it) {
+                        is ObjectDefinition -> {
+                            if (refs.containsKey(it)) {
+                                pojoProperties[it.fieldName] = refs[it]!!.entries.first().value
+                            }
+                        }
+                        else -> {
+                            pojoProperties[it.fieldName()] = objectProperty.properties[it.fieldName()]!!
+                        }
+                    }
+                }
+                objectSchemas[schemaName] = ObjectProperty(properties = pojoProperties)
+            }
+            else -> return
+        }
     }
 
     private fun toProperty(it: PropertyDefinition): Pair<String, PojoProperty> {
         return when (it) {
             is ArrayDefinition -> Pair(it.fieldName, getArrayProperty(it))
             is ObjectDefinition -> Pair(it.fieldName, getObjectProperty(it))
-            is ExtendedFieldDefinition -> Pair(
-                it.definition().fieldName(),
-                getPojoProperty(it.definition(), it.example)
-            )
+            is ExtendedFieldDefinition ->
+                Pair(
+                    it.definition().fieldName(),
+                    getPojoProperty(it.definition(), it.example),
+                )
             is FieldDefinition -> Pair(it.fieldName, getPojoProperty(it, null))
         }
     }
 
-    private fun getPojoProperty(it: FieldDefinition, example: Any?) = when (it.type) {
+    private fun getPojoProperty(
+        it: FieldDefinition,
+        example: Any?,
+    ) = when (it.type) {
         PropertyType.STRING -> StringProperty(example = example as? String)
         PropertyType.INTEGER -> IntegerProperty(example = example as? Int)
         PropertyType.NUMBER -> NumberProperty(example = example as? Double)
         PropertyType.BOOLEAN -> BooleanProperty(example = example as? Boolean)
         PropertyType.ARRAY -> throw IllegalStateException(
             "Property definition of array is expected to be as another type. " +
-                    "See #${ArrayDefinition::class.simpleName}"
+                "See #${ArrayDefinition::class.simpleName}",
         )
         PropertyType.OBJECT -> throw IllegalStateException(
             "Property definition of object is expected to be as another type. " +
-                    "See #${ObjectDefinition::class.simpleName}"
+                "See #${ObjectDefinition::class.simpleName}",
         )
     }
 
     private fun getArrayProperty(arrayDefinition: ArrayDefinition): ArrayProperty {
         return ArrayProperty(
-            items = toProperty(arrayDefinition.itemsDefinition).second
+            items = toProperty(arrayDefinition.itemsDefinition).second,
         )
     }
 
     private fun getObjectProperty(objectDefinition: ObjectDefinition): ObjectProperty {
         return ObjectProperty(
-            properties = objectDefinition.properties.associate { toProperty(it) }
+            properties = objectDefinition.properties.associate { toProperty(it) },
         )
     }
+
+    private fun isObjectReferenceEnabled() = this.features.isEnabled(Features.Feature.OBJECT_REFERENCE)
 }

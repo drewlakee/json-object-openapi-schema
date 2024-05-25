@@ -1,15 +1,11 @@
 package io.github.jooas.adapters
 
 class Features(
-    private val features: Map<Feature, Boolean>
+    private val features: Map<Feature, Boolean>,
 ) {
-
-    companion object {
-        val NO_FEATURES = Features(mapOf())
-    }
-
     enum class Feature {
-        WITH_EXAMPLE
+        WITH_EXAMPLE,
+        OBJECT_REFERENCE,
     }
 
     fun isEnabled(feature: Feature) = features[feature] ?: false

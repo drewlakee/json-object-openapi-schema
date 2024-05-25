@@ -1,0 +1,16 @@
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        integer_value:
+          type: integer
+        object_value:
+          $ref: "#/components/schemas/ObjectValue"
+    ObjectValue:
+      type: object
+      properties:
+        a:
+          type: integer
+        b:
+          type: string

@@ -16,7 +16,6 @@ import org.mockito.Mockito.verify
 import kotlin.test.assertEquals
 
 class JsonOpenApiObjectSchemaAdapterTest {
-
     private val sut = AdaptersFactory.createObjectAdapter()
 
     @Test
@@ -158,7 +157,37 @@ class JsonOpenApiObjectSchemaAdapterTest {
         assertEquals(expected, actual)
     }
 
-    private fun adapterWithExampleFeature() = AdaptersFactory.createObjectAdapter(
-        Pair(Features.Feature.WITH_EXAMPLE, true),
-    )
+    @Test
+    fun `Convert json object with inner object references into a openapi schema with components`() {
+        val sut = adapterWithObjectReferenceFeature()
+
+        val json = readJsonResourceAsText("object-1.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-1-object-reference.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Convert json object with inner nested object references into a openapi schema with components`() {
+        val sut = adapterWithObjectReferenceFeature()
+
+        val json = readJsonResourceAsText("object-2.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-2-object-reference.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    private fun adapterWithExampleFeature() =
+        AdaptersFactory.createObjectAdapter(
+            Pair(Features.Feature.WITH_EXAMPLE, true),
+        )
+
+    private fun adapterWithObjectReferenceFeature() =
+        AdaptersFactory.createObjectAdapter(
+            Pair(Features.Feature.OBJECT_REFERENCE, true),
+        )
 }
