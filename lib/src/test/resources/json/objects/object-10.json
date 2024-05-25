@@ -1,0 +1,13 @@
+{
+  "object_array": [
+    {
+      "int": 1,
+      "nested_array": [
+        {
+          "str": "value",
+          "int": 1
+        }
+      ]
+    }
+  ]
+}

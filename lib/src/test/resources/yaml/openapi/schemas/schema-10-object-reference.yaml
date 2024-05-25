@@ -1,0 +1,25 @@
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        object_array:
+          type: array
+          items:
+            $ref: "#/components/schemas/ObjectArray"
+    ObjectArray:
+      type: object
+      properties:
+        int:
+          type: integer
+        nested_array:
+          type: array
+          items:
+            $ref: "#/components/schemas/NestedArray"
+    NestedArray:
+      type: object
+      properties:
+        str:
+          type: string
+        int:
+          type: integer

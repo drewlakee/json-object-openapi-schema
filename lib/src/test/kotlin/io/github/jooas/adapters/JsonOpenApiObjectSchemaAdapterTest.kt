@@ -193,6 +193,42 @@ class JsonOpenApiObjectSchemaAdapterTest {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `Convert json object with array and inner object reference into a openapi schema with components`() {
+        val sut = adapterWithObjectReferenceFeature()
+
+        val json = readJsonResourceAsText("object-4.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-4-object-reference.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Convert json object with array and nested object reference into a openapi schema with components`() {
+        val sut = adapterWithObjectReferenceFeature()
+
+        val json = readJsonResourceAsText("object-9.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-9-object-reference.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Convert json object with array and nested array object reference into a openapi schema with components`() {
+        val sut = adapterWithObjectReferenceFeature()
+
+        val json = readJsonResourceAsText("object-10.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-10-object-reference.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
     private fun defaultAdapter() = AdaptersFactory.createObjectAdapter()
 
     private fun adapterWithExampleFeature() =

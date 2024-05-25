@@ -1,0 +1,11 @@
+{
+  "object_array": [
+    {
+      "int": 1,
+      "nested_object": {
+        "str": "value",
+        "int": 1
+      }
+    }
+  ]
+}
