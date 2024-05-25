@@ -150,6 +150,8 @@ class RecursiveYamlObjectAdapter(
                         is ArrayDefinition -> {
                             if (it.itemsDefinition is ObjectDefinition) {
                                 pojoProperties[it.fieldName] = refs[it.itemsDefinition]!!.entries.first().value
+                            } else {
+                                pojoProperties[it.fieldName()] = objectProperty.properties[it.fieldName()]!!
                             }
                         }
                         else -> {

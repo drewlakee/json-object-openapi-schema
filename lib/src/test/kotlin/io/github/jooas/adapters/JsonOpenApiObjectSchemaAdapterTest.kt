@@ -250,6 +250,18 @@ class JsonOpenApiObjectSchemaAdapterTest {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `Convert json object with arrays into an openapi schema`() {
+        val sut = adapterObjectReferenceWithExample()
+
+        val json = readJsonResourceAsText("object-13.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-13-object-reference-with-example.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
     private fun defaultAdapter() = AdaptersFactory.createObjectAdapter()
 
     private fun adapterWithExampleFeature() =
