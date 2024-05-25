@@ -251,7 +251,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with arrays into an openapi schema`() {
+    fun `Convert json weather production json into an openapi schema`() {
         val sut = adapterObjectReferenceWithExample()
 
         val json = readJsonResourceAsText("object-13.json", this::class.java)
@@ -259,6 +259,30 @@ class JsonOpenApiObjectSchemaAdapterTest {
         val actual = sut.convert(json)
 
         val expected = readYamlSchemaResourceAsText("schema-13-object-reference-with-example.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Convert json moysklad production json into an openapi schema`() {
+        val sut = adapterObjectReferenceWithExample()
+
+        val json = readJsonResourceAsText("object-13.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-13-object-reference-with-example.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Convert json discogs releases production json into an openapi schema`() {
+        val sut = adapterObjectReferenceWithExample()
+
+        val json = readJsonResourceAsText("object-15.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-15-object-reference-with-example.yaml", this::class.java)
         assertEquals(expected, actual)
     }
 

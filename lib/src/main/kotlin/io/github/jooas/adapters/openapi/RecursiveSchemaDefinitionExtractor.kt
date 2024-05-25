@@ -100,18 +100,19 @@ class RecursiveSchemaDefinitionExtractor(
 
         val elementsIterator = node.elements()
         val firstElement = elementsIterator.next()
-        val firstElementProperty = getPropertyDefinition(firstElement, fieldName)
-        val firstElementPropertyDefinition = firstElementProperty.definition()
+        val firstElementPropertyDefinition = getPropertyDefinition(firstElement, fieldName)
         while (elementsIterator.hasNext()) {
             val secondElement = elementsIterator.next()
-            val elementDefinition = getPropertyDefinition(secondElement, fieldName).definition()
+            val elementDefinition = getPropertyDefinition(secondElement, fieldName)
 
             if (firstElementPropertyDefinition != elementDefinition) {
                 val firstTypeIsObject = firstElementPropertyDefinition.type() == PropertyType.OBJECT
                 val secondTypeIsObject = elementDefinition.type() == PropertyType.OBJECT
                 if (firstTypeIsObject && secondTypeIsObject) {
                     throw JsonGenericArrayTypeException(
-                        "Json array node \"$fieldName[]\" expected to be strongly typed, expected [(OBJECT) $firstElement] but there's also [(OBJECT) $secondElement]",
+                        "Json array node \"$fieldName[]\" expected to be strongly typed, " +
+                            "expected [(OBJECT) ${firstElement.fields().asSequence().map { "${it.key}:${it.value.nodeType}" }.toList()}] " +
+                            "but there's also [(OBJECT) ${secondElement.fields().asSequence().map { "${it.key}:${it.value.nodeType}" }.toList()}]",
                     )
                 }
 
@@ -123,7 +124,7 @@ class RecursiveSchemaDefinitionExtractor(
             }
         }
 
-        return ArrayDefinition(fieldName, firstElementProperty)
+        return ArrayDefinition(fieldName, firstElementPropertyDefinition)
     }
 
     private fun getObjectPropertyDefinition(

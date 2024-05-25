@@ -1,0 +1,43 @@
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        meta:
+          $ref: "#/components/schemas/Meta"
+        stockByStore:
+          type: array
+          items:
+            $ref: "#/components/schemas/StockByStore"
+    Meta:
+      type: object
+      properties:
+        href:
+          type: string
+          example: https://api.moysklad.ru/api/remap/1.2/entity/product/c02e3a5c-007e-11e6-9464-e4de00000006?expand=supplier
+        metadataHref:
+          type: string
+          example: https://api.moysklad.ru/api/remap/1.2/entity/product/metadata
+        type:
+          type: string
+          example: product
+        mediaType:
+          type: string
+          example: application/json
+    StockByStore:
+      type: object
+      properties:
+        meta:
+          $ref: "#/components/schemas/Meta"
+        name:
+          type: string
+          example: Не основной склад
+        stock:
+          type: integer
+          example: -30
+        reserve:
+          type: integer
+          example: 0
+        inTransit:
+          type: integer
+          example: 0

@@ -1,0 +1,89 @@
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+        releases:
+          type: array
+          items:
+            $ref: "#/components/schemas/Releases"
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        pages:
+          type: integer
+          example: 63
+        per_page:
+          type: integer
+          example: 2
+        items:
+          type: integer
+          example: 126
+        urls:
+          $ref: "#/components/schemas/Urls"
+    Urls:
+      type: object
+      properties:
+        last:
+          type: string
+          example: https://api.discogs.com/artists/1/releases?page=63&per_page=2
+        next:
+          type: string
+          example: https://api.discogs.com/artists/1/releases?page=2&per_page=2
+    Releases:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 20209
+        status:
+          type: string
+          example: Accepted
+        type:
+          type: string
+          example: release
+        format:
+          type: string
+          example: 10"
+        label:
+          type: string
+          example: Svek
+        title:
+          type: string
+          example: Kaos
+        resource_url:
+          type: string
+          example: https://api.discogs.com/releases/20209
+        role:
+          type: string
+          example: Main
+        artist:
+          type: string
+          example: Stephan-G* & The Persuader
+        year:
+          type: integer
+          example: 1997
+        thumb:
+          type: string
+          example: ""
+        stats:
+          $ref: "#/components/schemas/Stats"
+    Stats:
+      type: object
+      properties:
+        community:
+          $ref: "#/components/schemas/Community"
+    Community:
+      type: object
+      properties:
+        in_wantlist:
+          type: integer
+          example: 1451
+        in_collection:
+          type: integer
+          example: 383
