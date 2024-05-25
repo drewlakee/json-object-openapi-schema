@@ -124,19 +124,20 @@ class RecursiveYamlObjectAdapter(
     ) {
         when (it) {
             is ObjectDefinition -> {
+                val propertyDefinitions = it.propertyDefinitions
                 val objectProperty = toProperty(it).second as ObjectProperty
                 objectSchemas[schemaName] = objectProperty
-                val objectSchemaReference = objectStructureRefs[it.properties] ?: ObjectReferenceProperty(schemaName)
+                val objectSchemaReference = objectStructureRefs[propertyDefinitions] ?: ObjectReferenceProperty(schemaName)
                 refs[it] = mapOf(it.fieldName to objectSchemaReference)
 
                 it.properties.forEach { recursiveExtract(it, refs, objectSchemas, objectStructureRefs) }
 
-                if (objectStructureRefs.containsKey(it.properties)) {
+                if (objectStructureRefs.containsKey(propertyDefinitions)) {
                     objectSchemas.remove(schemaName)
                     return
                 }
 
-                objectStructureRefs[it.properties] = objectSchemaReference
+                objectStructureRefs[propertyDefinitions] = objectSchemaReference
 
                 val pojoProperties: MutableMap<String, PojoProperty> = LinkedHashMap()
                 it.properties.forEach {

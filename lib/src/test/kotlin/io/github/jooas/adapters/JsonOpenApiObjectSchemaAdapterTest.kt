@@ -31,7 +31,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object without nested objects into a openapi schema`() {
+    fun `Convert json object without nested objects into an openapi schema`() {
         val json = readJsonResourceAsText("object-0.json", this::class.java)
 
         val actual = sut.convert(json)
@@ -41,7 +41,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with nested object into a openapi schema`() {
+    fun `Convert json object with nested object into an openapi schema`() {
         val json = readJsonResourceAsText("object-1.json", this::class.java)
 
         val actual = sut.convert(json)
@@ -51,7 +51,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with deep nested objects into a openapi schema`() {
+    fun `Convert json object with deep nested objects into an openapi schema`() {
         val json = readJsonResourceAsText("object-2.json", this::class.java)
 
         val actual = sut.convert(json)
@@ -61,7 +61,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with primitive type arrays into a openapi schema`() {
+    fun `Convert json object with primitive type arrays into an openapi schema`() {
         val json = readJsonResourceAsText("object-3.json", this::class.java)
 
         val actual = sut.convert(json)
@@ -71,7 +71,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with object arrays into a openapi schema`() {
+    fun `Convert json object with object arrays into an openapi schema`() {
         val json = readJsonResourceAsText("object-4.json", this::class.java)
 
         val actual = sut.convert(json)
@@ -110,7 +110,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object without nested objects into a openapi schema with example`() {
+    fun `Convert json object without nested objects into an openapi schema with example`() {
         val sut = adapterWithExampleFeature()
 
         val json = readJsonResourceAsText("object-0.json", this::class.java)
@@ -122,7 +122,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with nested object into a openapi schema with example`() {
+    fun `Convert json object with nested object into an openapi schema with example`() {
         val sut = adapterWithExampleFeature()
 
         val json = readJsonResourceAsText("object-1.json", this::class.java)
@@ -134,7 +134,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with extra string field into a openapi schema with example`() {
+    fun `Convert json object with extra string field into an openapi schema with example`() {
         val sut = adapterWithExampleFeature()
 
         val json = readJsonResourceAsText("object-8.json", this::class.java)
@@ -146,7 +146,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with object arrays into a openapi schema with example`() {
+    fun `Convert json object with object arrays into an openapi schema with example`() {
         val sut = adapterWithExampleFeature()
 
         val json = readJsonResourceAsText("object-4.json", this::class.java)
@@ -158,7 +158,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with inner object references into a openapi schema with components`() {
+    fun `Convert json object with inner object references into an openapi schema with components`() {
         val sut = adapterWithObjectReferenceFeature()
 
         val json = readJsonResourceAsText("object-1.json", this::class.java)
@@ -170,7 +170,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with inner nested object references into a openapi schema with components`() {
+    fun `Convert json object with inner nested object references into an openapi schema with components`() {
         val sut = adapterWithObjectReferenceFeature()
 
         val json = readJsonResourceAsText("object-2.json", this::class.java)
@@ -182,7 +182,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object without inner nested object references into a openapi schema with components`() {
+    fun `Convert json object without inner nested object references into an openapi schema with components`() {
         val sut = adapterWithObjectReferenceFeature()
 
         val json = readJsonResourceAsText("object-3.json", this::class.java)
@@ -194,7 +194,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with array and inner object reference into a openapi schema with components`() {
+    fun `Convert json object with array and inner object reference into an openapi schema with components`() {
         val sut = adapterWithObjectReferenceFeature()
 
         val json = readJsonResourceAsText("object-4.json", this::class.java)
@@ -206,7 +206,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with array and nested object reference into a openapi schema with components`() {
+    fun `Convert json object with array and nested object reference into an openapi schema with components`() {
         val sut = adapterWithObjectReferenceFeature()
 
         val json = readJsonResourceAsText("object-9.json", this::class.java)
@@ -218,7 +218,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with array and nested array object reference into a openapi schema with components`() {
+    fun `Convert json object with array and nested array object reference into an openapi schema with components`() {
         val sut = adapterWithObjectReferenceFeature()
 
         val json = readJsonResourceAsText("object-10.json", this::class.java)
@@ -230,7 +230,7 @@ class JsonOpenApiObjectSchemaAdapterTest {
     }
 
     @Test
-    fun `Convert json object with object deduplication reference into a openapi schema with components`() {
+    fun `Convert json object with object deduplication reference into an openapi schema with components`() {
         val sut = adapterWithObjectReferenceFeature()
 
         val json = readJsonResourceAsText("object-11.json", this::class.java)
@@ -238,6 +238,30 @@ class JsonOpenApiObjectSchemaAdapterTest {
         val actual = sut.convert(json)
 
         val expected = readYamlSchemaResourceAsText("schema-11-object-reference.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Convert json object with object deduplication reference and example into an openapi schema with components`() {
+        val sut = adapterObjectReferenceWithExample()
+
+        val json = readJsonResourceAsText("object-11.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-11-object-reference-with-example.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Convert json object with array object deduplication reference and example into an openapi schema with components`() {
+        val sut = adapterObjectReferenceWithExample()
+
+        val json = readJsonResourceAsText("object-12.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-12-object-reference-with-example.yaml", this::class.java)
         assertEquals(expected, actual)
     }
 
@@ -250,6 +274,12 @@ class JsonOpenApiObjectSchemaAdapterTest {
 
     private fun adapterWithObjectReferenceFeature() =
         AdaptersFactory.createObjectAdapter(
+            Pair(Features.Feature.OBJECT_REFERENCE, true),
+        )
+
+    private fun adapterObjectReferenceWithExample() =
+        AdaptersFactory.createObjectAdapter(
+            Pair(Features.Feature.WITH_EXAMPLE, true),
             Pair(Features.Feature.OBJECT_REFERENCE, true),
         )
 }

@@ -1,0 +1,28 @@
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        nested_object1:
+          $ref: "#/components/schemas/NestedObject"
+        nested_object2:
+          $ref: "#/components/schemas/NestedObject1"
+    NestedObject:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          example: true
+        percentage:
+          type: number
+          example: 0.99
+        nested_object3:
+          type: array
+          items:
+            $ref: "#/components/schemas/NestedObject1"
+    NestedObject1:
+      type: object
+      properties:
+        object_id:
+          type: integer
+          example: 3
