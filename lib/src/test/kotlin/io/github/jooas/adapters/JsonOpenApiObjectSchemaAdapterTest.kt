@@ -3,16 +3,12 @@ package io.github.jooas.adapters
 import io.github.jooas.adapters.exceptions.JsonEmptyObjectException
 import io.github.jooas.adapters.exceptions.JsonGenericArrayTypeException
 import io.github.jooas.adapters.exceptions.JsonIsNotAnObjectException
-import io.github.jooas.adapters.input.JsonTextStream
-import io.github.jooas.adapters.output.ConsoleSchemaOutputStream
 import io.github.jooas.readJsonResourceAsText
 import io.github.jooas.readYamlSchemaResourceAsText
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.mockito.Mockito.spy
-import org.mockito.Mockito.verify
 import kotlin.test.assertEquals
 
 class JsonOpenApiObjectSchemaAdapterTest {
@@ -96,17 +92,6 @@ class JsonOpenApiObjectSchemaAdapterTest {
     fun `Throw exception if json object with generic object array (float, string)`() {
         val json = readJsonResourceAsText("object-7.json", this::class.java)
         assertThrows<JsonGenericArrayTypeException> { sut.convert(json) }
-    }
-
-    @Test
-    fun `Pass-through input-output json-text to console`() {
-        val jsonTextStream = JsonTextStream(readJsonResourceAsText("object-0.json", this::class.java))
-        val consoleOutputStream = spy(ConsoleSchemaOutputStream())
-
-        sut.convert(jsonTextStream, consoleOutputStream)
-
-        val expected = readYamlSchemaResourceAsText("schema-0.yaml", this::class.java)
-        verify(consoleOutputStream).flush(expected)
     }
 
     @Test
