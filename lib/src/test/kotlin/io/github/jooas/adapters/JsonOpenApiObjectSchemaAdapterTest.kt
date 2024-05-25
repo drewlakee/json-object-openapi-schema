@@ -16,7 +16,7 @@ import org.mockito.Mockito.verify
 import kotlin.test.assertEquals
 
 class JsonOpenApiObjectSchemaAdapterTest {
-    private val sut = AdaptersFactory.createObjectAdapter()
+    private val sut = defaultAdapter()
 
     @Test
     fun `Throw exception if json is valid and object is empty itself`() {
@@ -192,6 +192,8 @@ class JsonOpenApiObjectSchemaAdapterTest {
         val expected = readYamlSchemaResourceAsText("schema-3-object-reference.yaml", this::class.java)
         assertEquals(expected, actual)
     }
+
+    private fun defaultAdapter() = AdaptersFactory.createObjectAdapter()
 
     private fun adapterWithExampleFeature() =
         AdaptersFactory.createObjectAdapter(
