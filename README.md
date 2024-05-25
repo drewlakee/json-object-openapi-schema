@@ -34,6 +34,112 @@ Schema:
         b:
           type: string
 ```
+
+- object references and structural deduplication
+
+```json
+{
+  "pagination": {
+    "page": 1,
+    "pages": 63,
+    "per_page": 2,
+    "items": 126,
+    "urls": {
+      "last": "https://api.discogs.com/artists/1/releases?page=63&per_page=2",
+      "next": "https://api.discogs.com/artists/1/releases?page=2&per_page=2"
+    }
+  },
+  "community": {
+    "in_wantlist": 1451,
+    "in_collection": 383
+  },
+  "releases": [
+    {
+      "id": 20209,
+      "stats": {
+        "community": {
+          "in_wantlist": 1451,
+          "in_collection": 383
+        }
+      }
+    },
+    {
+      "id": 62584,
+      "stats": {
+        "community": {
+          "in_wantlist": 830,
+          "in_collection": 682
+        }
+      }
+    }
+  ]
+}
+```
+
+```yaml
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+        community:
+          $ref: "#/components/schemas/Community"
+        releases:
+          type: array
+          items:
+            $ref: "#/components/schemas/Releases"
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        pages:
+          type: integer
+          example: 63
+        per_page:
+          type: integer
+          example: 2
+        items:
+          type: integer
+          example: 126
+        urls:
+          $ref: "#/components/schemas/Urls"
+    Urls:
+      type: object
+      properties:
+        last:
+          type: string
+          example: https://api.discogs.com/artists/1/releases?page=63&per_page=2
+        next:
+          type: string
+          example: https://api.discogs.com/artists/1/releases?page=2&per_page=2
+    Community:
+      type: object
+      properties:
+        in_wantlist:
+          type: integer
+          example: 1451
+        in_collection:
+          type: integer
+          example: 383
+    Releases:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 20209
+        stats:
+          $ref: "#/components/schemas/Stats"
+    Stats:
+      type: object
+      properties:
+        community:
+          $ref: "#/components/schemas/Community"
+```
+
 Check specification rendering here: https://editor.swagger.io/
 
 ## Usage examples
