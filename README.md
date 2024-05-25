@@ -93,17 +93,6 @@ Schema:
     )
 ```
 
-### Custom interface-friendly I/O streams
-
-```kotlin
-    adapter.convert(
-        // custom suppliers (can be files, API-calls)
-        input = JsonTextStream(text = json),
-        // prints resulting yaml in console
-        output = ConsoleSchemaOutputStream()
-    )
-```
-
 ```yaml
 Schema:
   type: object
