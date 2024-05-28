@@ -1,0 +1,44 @@
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        current:
+          $ref: "#/components/schemas/Current"
+        hourly:
+          $ref: "#/components/schemas/Hourly"
+    Current:
+      type: object
+      properties:
+        time:
+          type: string
+          example: 2022-01-01T15:00
+        temperature_2m:
+          type: number
+          example: 2.4
+        wind_speed_10m:
+          type: number
+          example: 11.9
+    Hourly:
+      type: object
+      properties:
+        time:
+          type: array
+          items:
+            type: string
+            example: 2022-07-01T00:00
+        wind_speed_10m:
+          type: array
+          items:
+            type: number
+            example: 3.16
+        temperature_2m:
+          type: array
+          items:
+            type: number
+            example: 13.7
+        relative_humidity_2m:
+          type: array
+          items:
+            type: integer
+            example: 82

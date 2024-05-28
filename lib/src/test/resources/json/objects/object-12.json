@@ -1,0 +1,14 @@
+{
+  "nested_object1": {
+    "valid": true,
+    "percentage": 0.99,
+    "nested_object3": [
+      {
+        "object_id": 3
+      }
+    ]
+  },
+  "nested_object2": {
+    "object_id": 2
+  }
+}

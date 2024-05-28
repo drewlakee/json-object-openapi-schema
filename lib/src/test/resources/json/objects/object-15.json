@@ -1,0 +1,52 @@
+{
+  "pagination": {
+    "page": 1,
+    "pages": 63,
+    "per_page": 2,
+    "items": 126,
+    "urls": {
+      "last": "https://api.discogs.com/artists/1/releases?page=63&per_page=2",
+      "next": "https://api.discogs.com/artists/1/releases?page=2&per_page=2"
+    }
+  },
+  "releases": [
+    {
+      "id": 20209,
+      "status": "Accepted",
+      "type": "release",
+      "format": "10\"",
+      "label": "Svek",
+      "title": "Kaos",
+      "resource_url": "https://api.discogs.com/releases/20209",
+      "role": "Main",
+      "artist": "Stephan-G* & The Persuader",
+      "year": 1997,
+      "thumb": "",
+      "stats": {
+        "community": {
+          "in_wantlist": 1451,
+          "in_collection": 383
+        }
+      }
+    },
+    {
+      "id": 62584,
+      "status": "Accepted",
+      "type": "release",
+      "format": "12\"",
+      "label": "Svek",
+      "title": "Snorkelmannen Ø Hans Vänner",
+      "resource_url": "https://api.discogs.com/releases/62584",
+      "role": "Main",
+      "artist": "Mr. Barth* & The Persuader",
+      "year": 1997,
+      "thumb": "",
+      "stats": {
+        "community": {
+          "in_wantlist": 830,
+          "in_collection": 682
+        }
+      }
+    }
+  ]
+}

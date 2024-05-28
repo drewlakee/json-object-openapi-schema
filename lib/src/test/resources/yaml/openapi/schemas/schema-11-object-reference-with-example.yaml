@@ -1,0 +1,18 @@
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        object:
+          $ref: "#/components/schemas/Object"
+        same_object:
+          $ref: "#/components/schemas/Object"
+    Object:
+      type: object
+      properties:
+        int:
+          type: integer
+          example: 1
+        str:
+          type: string
+          example: value1

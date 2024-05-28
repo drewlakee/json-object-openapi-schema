@@ -1,0 +1,21 @@
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        integer_array:
+          type: array
+          items:
+            type: integer
+        float_array:
+          type: array
+          items:
+            type: number
+        string_array:
+          type: array
+          items:
+            type: string
+        boolean_array:
+          type: array
+          items:
+            type: boolean

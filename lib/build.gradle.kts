@@ -4,6 +4,63 @@ plugins {
 
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
+    `maven-publish`
+    signing
+}
+
+group = "io.github.drewlakee"
+version = "1.0.1"
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+
+            group = "io.github.drewlakee"
+            artifactId = "jooas"
+            version = "1.0.1"
+
+            from(components["java"])
+
+            pom {
+                name = "json-object-openapi-schema"
+                description = "A Kotlin library for converting Json-object into OpenAPI Schema"
+                url = "https://github.com/drewlakee/json-object-openapi-schema"
+                licenses {
+                    license {
+                        name = "MIT License"
+                        url = "http://www.opensource.org/licenses/mit-license.php"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "drewlakee"
+                        name = "Andrew Aleynikov"
+                        email = "drew.lake@yandex.com"
+                    }
+                }
+                scm {
+                    connection = "scm:git:git://github.com/drewlakee/json-object-openapi-schema.git"
+                    developerConnection = "scm:git:ssh://github.com/drewlakee/json-object-openapi-schema.git"
+                    url = "http://github.com/drewlakee/json-object-openapi-schema"
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            val releasesRepoUrl = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            val snapshotsRepoUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+            credentials {
+                username = project.property("oss.username") as String
+                password = project.property("oss.password") as String
+            }
+        }
+    }
+}
+
+signing {
+    sign(publishing.publications["mavenJava"])
 }
 
 repositories {
@@ -35,6 +92,8 @@ dependencies {
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
+    withJavadocJar()
+    withSourcesJar()
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
