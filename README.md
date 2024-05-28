@@ -1,7 +1,6 @@
 # A Kotlin library for converting Json-object into OpenAPI Schema
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.drewlakee/jooas/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.drewlakee/jooas)
-[![javadoc](https://javadoc.io/badge2/io.github.drewlakee/jooas/javadoc.svg)](https://javadoc.io/doc/io.github.drewlakee/jooas)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.drewlakee/jooas.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.github.drewlakee%22%20AND%20a:%22jooas%22)
 
 Converts a json object into an OpenAPI schema in YAML format
 
