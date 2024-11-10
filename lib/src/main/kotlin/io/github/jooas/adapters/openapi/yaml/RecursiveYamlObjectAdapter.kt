@@ -77,39 +77,70 @@ class RecursiveYamlObjectAdapter(
     private fun extractObjectReferencesInDepth(objectDefinitions: List<PropertyDefinition>): ObjectReferences {
         val refs: MutableMap<PropertyDefinition, Map<String, PojoProperty>> = LinkedHashMap()
         val objectSchemas: MutableMap<String, PojoProperty> = LinkedHashMap()
-        val objectStructureRefs: MutableMap<List<PropertyDefinition>, PojoProperty> = LinkedHashMap()
-        objectDefinitions.forEach { recursiveExtract(it, refs, objectSchemas, objectStructureRefs) }
+        val objectStructureRefs: MutableMap<List<PropertyDefinition>, ObjectReferenceProperty> = LinkedHashMap()
+        val arrayStructureRefs: MutableMap<List<PropertyDefinition>, ArrayObjectReferenceProperty> = LinkedHashMap()
+        objectDefinitions.forEach {
+            recursiveExtract(
+                propertyDefinition = it,
+                refs = refs,
+                objectSchemas = objectSchemas,
+                objectStructureRefs = objectStructureRefs,
+                arrayStructureRefs = arrayStructureRefs,
+            )
+        }
         return ObjectReferences(refs, objectSchemas)
     }
 
     private fun recursiveExtract(
-        it: PropertyDefinition,
+        propertyDefinition: PropertyDefinition,
         refs: MutableMap<PropertyDefinition, Map<String, PojoProperty>>,
         objectSchemas: MutableMap<String, PojoProperty>,
-        objectStructureRefs: MutableMap<List<PropertyDefinition>, PojoProperty>,
+        objectStructureRefs: MutableMap<List<PropertyDefinition>, ObjectReferenceProperty>,
+        arrayStructureRefs: MutableMap<List<PropertyDefinition>, ArrayObjectReferenceProperty>,
     ) {
-        val schemaName =
-            SchemaNameGenerator.tryPascalCaseWhile(it.fieldName()) { schemaName ->
-                objectSchemas.containsKey(schemaName)
-            }
-        when (it) {
-            is ArrayDefinition -> extractArrayObject(schemaName, it, objectSchemas, refs, objectStructureRefs)
-            is ObjectDefinition -> extractObjects(schemaName, it, objectSchemas, refs, objectStructureRefs)
+        val schemaName = SchemaNameGenerator.tryPascalCaseWhile(propertyDefinition.fieldName()) { objectSchemas.containsKey(it) }
+        when (propertyDefinition) {
+            is ArrayDefinition -> extractArrayObject(
+                schemaName = schemaName,
+                arrayDefinition = propertyDefinition,
+                objectSchemas = objectSchemas,
+                refs = refs,
+                objectStructureRefs = objectStructureRefs,
+                arrayStructureRefs = arrayStructureRefs,
+            )
+            is ObjectDefinition -> extractObjects(
+                schemaName = schemaName,
+                objectDefinition = propertyDefinition,
+                objectSchemas = objectSchemas,
+                refs = refs,
+                objectStructureRefs = objectStructureRefs,
+                arrayStructureRefs = arrayStructureRefs,
+            )
             else -> return
         }
     }
 
     private fun extractArrayObject(
         schemaName: String,
-        it: ArrayDefinition,
+        arrayDefinition: ArrayDefinition,
         objectSchemas: MutableMap<String, PojoProperty>,
         refs: MutableMap<PropertyDefinition, Map<String, PojoProperty>>,
-        objectStructureRefs: MutableMap<List<PropertyDefinition>, PojoProperty>,
+        objectStructureRefs: MutableMap<List<PropertyDefinition>, ObjectReferenceProperty>,
+        arrayStructureRefs: MutableMap<List<PropertyDefinition>, ArrayObjectReferenceProperty>,
     ) {
-        when (val itemsDefinition = it.itemsDefinition) {
+        when (val itemsDefinition = arrayDefinition.itemsDefinition) {
             is ObjectDefinition -> {
-                extractObjects(schemaName, itemsDefinition, objectSchemas, refs, objectStructureRefs)
-                refs[itemsDefinition] = mapOf(schemaName to ArrayObjectReferenceProperty(schemaName = schemaName))
+                extractObjects(
+                    schemaName = schemaName,
+                    objectDefinition = itemsDefinition,
+                    objectSchemas = objectSchemas,
+                    refs = refs,
+                    objectStructureRefs = objectStructureRefs,
+                    arrayStructureRefs = arrayStructureRefs,
+                )
+                val arrayReference = arrayStructureRefs[itemsDefinition.properties] ?: ArrayObjectReferenceProperty(schemaName = schemaName)
+                arrayStructureRefs[itemsDefinition.properties] = arrayReference
+                refs[itemsDefinition] = mapOf(arrayReference.schemaName to arrayReference)
             }
             else -> return
         }
@@ -117,53 +148,56 @@ class RecursiveYamlObjectAdapter(
 
     private fun extractObjects(
         schemaName: String,
-        it: PropertyDefinition,
+        objectDefinition: ObjectDefinition,
         objectSchemas: MutableMap<String, PojoProperty>,
         refs: MutableMap<PropertyDefinition, Map<String, PojoProperty>>,
-        objectStructureRefs: MutableMap<List<PropertyDefinition>, PojoProperty>,
+        objectStructureRefs: MutableMap<List<PropertyDefinition>, ObjectReferenceProperty>,
+        arrayStructureRefs: MutableMap<List<PropertyDefinition>, ArrayObjectReferenceProperty>,
     ) {
-        when (it) {
-            is ObjectDefinition -> {
-                val propertyDefinitions = it.propertyDefinitions
-                val objectProperty = toProperty(it).second as ObjectProperty
-                objectSchemas[schemaName] = objectProperty
-                val objectSchemaReference = objectStructureRefs[propertyDefinitions] ?: ObjectReferenceProperty(schemaName)
-                refs[it] = mapOf(it.fieldName to objectSchemaReference)
+        val propertyDefinitions = objectDefinition.propertyDefinitions
+        val objectProperty = toProperty(objectDefinition).second as ObjectProperty
+        objectSchemas[schemaName] = objectProperty
+        val objectSchemaReference = objectStructureRefs[propertyDefinitions] ?: ObjectReferenceProperty(schemaName)
+        refs[objectDefinition] = mapOf(objectDefinition.fieldName to objectSchemaReference)
 
-                it.properties.forEach { recursiveExtract(it, refs, objectSchemas, objectStructureRefs) }
+        objectDefinition.properties.forEach {
+            recursiveExtract(
+                propertyDefinition = it,
+                refs = refs,
+                objectSchemas = objectSchemas,
+                objectStructureRefs = objectStructureRefs,
+                arrayStructureRefs = arrayStructureRefs,
+            )
+        }
 
-                if (objectStructureRefs.containsKey(propertyDefinitions)) {
-                    objectSchemas.remove(schemaName)
-                    return
-                }
+        if (objectStructureRefs.containsKey(propertyDefinitions)) {
+            objectSchemas.remove(schemaName)
+            return
+        }
 
-                objectStructureRefs[propertyDefinitions] = objectSchemaReference
+        objectStructureRefs[propertyDefinitions] = objectSchemaReference
 
-                val pojoProperties: MutableMap<String, PojoProperty> = LinkedHashMap()
-                it.properties.forEach {
-                    when (it) {
-                        is ObjectDefinition -> {
-                            if (refs.containsKey(it)) {
-                                pojoProperties[it.fieldName] = refs[it]!!.entries.first().value
-                            }
-                        }
-                        is ArrayDefinition -> {
-                            if (it.itemsDefinition is ObjectDefinition) {
-                                pojoProperties[it.fieldName] = refs[it.itemsDefinition]!!.entries.first().value
-                            } else {
-                                pojoProperties[it.fieldName()] = objectProperty.properties[it.fieldName()]!!
-                            }
-                        }
-                        else -> {
-                            pojoProperties[it.fieldName()] = objectProperty.properties[it.fieldName()]!!
-                        }
+        val pojoProperties: MutableMap<String, PojoProperty> = LinkedHashMap()
+        objectDefinition.properties.forEach {
+            when (it) {
+                is ObjectDefinition -> {
+                    if (refs.containsKey(it)) {
+                        pojoProperties[it.fieldName] = refs[it]!!.entries.first().value
                     }
                 }
-                objectSchemas[schemaName] = ObjectProperty(properties = pojoProperties)
+                is ArrayDefinition -> {
+                    if (it.itemsDefinition is ObjectDefinition) {
+                        pojoProperties[it.fieldName] = refs[it.itemsDefinition]!!.entries.first().value
+                    } else {
+                        pojoProperties[it.fieldName()] = objectProperty.properties[it.fieldName()]!!
+                    }
+                }
+                else -> {
+                    pojoProperties[it.fieldName()] = objectProperty.properties[it.fieldName()]!!
+                }
             }
-
-            else -> return
         }
+        objectSchemas[schemaName] = ObjectProperty(properties = pojoProperties)
     }
 
     private fun toProperty(it: PropertyDefinition): Pair<String, PojoProperty> {

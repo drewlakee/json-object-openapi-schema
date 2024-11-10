@@ -1,0 +1,146 @@
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        styles:
+          type: array
+          items:
+            type: string
+            example: Goa Trance
+        genres:
+          type: array
+          items:
+            type: string
+            example: Electronic
+        videos:
+          type: array
+          items:
+            $ref: "#/components/schemas/Videos"
+        title:
+          type: string
+          example: Stardiver
+        main_release:
+          type: integer
+          example: 66785
+        main_release_url:
+          type: string
+          example: https://api.discogs.com/releases/66785
+        uri:
+          type: string
+          example: https://www.discogs.com/Electric-Universe-Stardiver/master/1000
+        artists:
+          type: array
+          items:
+            $ref: "#/components/schemas/Artists"
+        versions_url:
+          type: string
+          example: https://api.discogs.com/masters/1000/versions
+        year:
+          type: integer
+          example: 1997
+        images:
+          type: array
+          items:
+            $ref: "#/components/schemas/Images"
+        resource_url:
+          type: string
+          example: https://api.discogs.com/masters/1000
+        tracklist:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tracklist"
+        id:
+          type: integer
+          example: 1000
+        num_for_sale:
+          type: integer
+          example: 9
+        lowest_price:
+          type: number
+          example: 9.36
+        data_quality:
+          type: string
+          example: Correct
+    Videos:
+      type: object
+      properties:
+        duration:
+          type: integer
+          example: 421
+        description:
+          type: string
+          example: Electric Universe - Alien Encounter Part 2 (Spirit Zone 97)
+        embed:
+          type: boolean
+          example: true
+        uri:
+          type: string
+          example: https://www.youtube.com/watch?v=n1LGinzMDi8
+        title:
+          type: string
+          example: Electric Universe - Alien Encounter Part 2 (Spirit Zone 97)
+    Artists:
+      type: object
+      properties:
+        join:
+          type: string
+          example: ""
+        name:
+          type: string
+          example: Electric Universe
+        anv:
+          type: string
+          example: ""
+        tracks:
+          type: string
+          example: ""
+        role:
+          type: string
+          example: ""
+        resource_url:
+          type: string
+          example: https://api.discogs.com/artists/21849
+        id:
+          type: integer
+          example: 21849
+    Images:
+      type: object
+      properties:
+        height:
+          type: integer
+          example: 569
+        resource_url:
+          type: string
+          example: https://api-img.discogs.com/_0K5t_iLs6CzLPKTB4mwHVI3Vy0=/fit-in/600x569/filters:strip_icc():format(jpeg):mode_rgb():quality(96)/discogs-images/R-66785-1213949871.jpeg.jpg
+        type:
+          type: string
+          example: primary
+        uri:
+          type: string
+          example: https://api-img.discogs.com/_0K5t_iLs6CzLPKTB4mwHVI3Vy0=/fit-in/600x569/filters:strip_icc():format(jpeg):mode_rgb():quality(96)/discogs-images/R-66785-1213949871.jpeg.jpg
+        uri150:
+          type: string
+          example: https://api-img.discogs.com/sSWjXKczZseDjX2QohG1Lc77F-w=/fit-in/150x150/filters:strip_icc():format(jpeg):mode_rgb()/discogs-images/R-66785-1213949871.jpeg.jpg
+        width:
+          type: integer
+          example: 600
+    Tracklist:
+      type: object
+      properties:
+        duration:
+          type: string
+          example: 7:00
+        position:
+          type: string
+          example: 1
+        type_:
+          type: string
+          example: track
+        title:
+          type: string
+          example: Alien Encounter (Part 2)
+        extraartists:
+          type: array
+          items:
+            $ref: "#/components/schemas/Artists"
