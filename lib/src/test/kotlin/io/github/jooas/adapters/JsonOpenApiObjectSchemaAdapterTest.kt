@@ -286,6 +286,42 @@ class JsonOpenApiObjectSchemaAdapterTest {
         assertEquals(expected, actual)
     }
 
+    @Test
+    fun `Deduplicate inner array's json object in root object depth`() {
+        val sut = adapterWithObjectReferenceFeature()
+
+        val json = readJsonResourceAsText("object-16.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-16-object-reference-array-deduplication.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Deduplicate inner array's json object in root object depth 1`() {
+        val sut = adapterWithObjectReferenceFeature()
+
+        val json = readJsonResourceAsText("object-17.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-17-object-reference-array-deduplication.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Generate all the schemas for inner array's objects`() {
+        val sut = adapterObjectReferenceWithExample()
+
+        val json = readJsonResourceAsText("object-18.json", this::class.java)
+
+        val actual = sut.convert(json)
+
+        val expected = readYamlSchemaResourceAsText("schema-18-object-reference-with-example-missing.yaml", this::class.java)
+        assertEquals(expected, actual)
+    }
+
     private fun defaultAdapter() = AdaptersFactory.createObjectAdapter()
 
     private fun adapterWithExampleFeature() =

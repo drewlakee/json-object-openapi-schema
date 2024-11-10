@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "io.github.drewlakee"
-version = "1.0.2"
+version = "1.0.3"
 
 publishing {
     publications {
@@ -17,7 +17,7 @@ publishing {
 
             group = "io.github.drewlakee"
             artifactId = "jooas"
-            version = "1.0.2"
+            version = "1.0.3"
 
             from(components["java"])
 

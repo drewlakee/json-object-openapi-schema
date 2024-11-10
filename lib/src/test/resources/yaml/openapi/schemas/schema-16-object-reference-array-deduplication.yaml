@@ -1,0 +1,18 @@
+components:
+  schemas:
+    Schema:
+      type: object
+      properties:
+        firstRow:
+          type: array
+          items:
+            $ref: "#/components/schemas/FirstRow"
+        secondRow:
+          type: array
+          items:
+            $ref: "#/components/schemas/FirstRow"
+    FirstRow:
+      type: object
+      properties:
+        field:
+          type: integer
